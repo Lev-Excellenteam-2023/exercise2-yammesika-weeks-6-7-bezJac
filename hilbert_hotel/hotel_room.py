@@ -25,7 +25,7 @@ class HotelRoom:
            
     
     """
-    
+
     def __init__(self, room_type, room_number, floor):
         self.room_type = room_type
         self.room_number = room_number
@@ -35,18 +35,20 @@ class HotelRoom:
 
     def __str__(self):
         return f"Room Number: {self.room_number}\nFloor: {self.floor}\nAvailable: {self.available}\n" \
-               f"Current number of beds: {self.current_beds}"
+               f"Current number of beds: {self.current_beds}\nRoom type: {self.room_type}"
 
     def reserve_room(self):
-        self.available = False
-        self.current_beds += 1
+        if self.available is True:
+            self.available = False
+            self.current_beds += 1
 
     def release_room(self):
-        self.available = True
-        self.current_beds = 0
+        if self.available is False:
+            self.available = True
+            self.current_beds = 0
 
     def add_bed(self):
-        if self.current_beds < self.max_beds_limit():
+        if self.current_beds < self.max_beds_limit() and self.available is False:
             self.current_beds += 1
 
     def remove_bed(self):
