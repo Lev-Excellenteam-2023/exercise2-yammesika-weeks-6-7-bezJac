@@ -1,5 +1,5 @@
 from square import Square
-
+from cube_tower import CubeColor
 
 class Cube:
     """
@@ -20,7 +20,7 @@ class Cube:
             Returns the surface area of the cube.
         """
 
-    def __init__(self, length, color):
+    def __init__(self, length: int, color: CubeColor):
         self.base = Square(length)
         self.color = color
 

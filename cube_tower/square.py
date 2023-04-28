@@ -22,7 +22,7 @@ class Square:
           Returns the perimeter of the Square.
       """
 
-    def __init__(self, length):
+    def __init__(self, length: int):
         self.edge_length = length
 
     def __str__(self):

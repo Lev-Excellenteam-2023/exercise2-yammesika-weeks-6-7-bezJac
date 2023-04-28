@@ -29,7 +29,7 @@ class CubeTower:
         if self.tower is not None:
             return "".join([f"{i}-" + self.tower[i].__str__() + '\n' for i in range(len(self.tower) - 1, 0, -1)])
 
-    def add_cube(self, cube):
+    def add_cube(self, cube: Cube) -> None:
         """
             Adds a Cube object to the top of the tower if the cube meets certain conditions.
             new cube must be different color and smaller in surface then current top cube in the tower
@@ -46,20 +46,19 @@ class CubeTower:
             top_index = len(self.tower) - 1
             top_cube_color = self.tower[top_index].color
             top_cube_length = self.tower[top_index].base.get_surface()
-            if top_cube_color != cube.color and top_cube_length > cube.base.get_surface():
-                self.tower.append(cube)
+            self.tower.append(
+                cube) if top_cube_color != cube.color and top_cube_length > cube.base.get_surface() else None
 
     @staticmethod
-    def randomize_tower():
+    def randomize_tower() -> Cube:
         """
             Generates a random tower of cubes.
 
             Yields:
             Cube: A Cube object with random edge length and color.
         """
-        n = randint(1, 101)
-        for i in range(n):
+        number_of_cubes = randint(1, 101)
+        for _ in range(number_of_cubes):
             edge = randint(1, 101)
             color = choice([CubeColor.WHITE, CubeColor.BLACK])
             yield Cube(edge, color)
-
