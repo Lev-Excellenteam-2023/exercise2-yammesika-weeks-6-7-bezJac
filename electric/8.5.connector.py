@@ -1,3 +1,5 @@
+from electric.logic_gate import LogicGate
+
 
 class Connector:
     """
@@ -13,6 +15,7 @@ class Connector:
           count_gates: Counts the number of gates in a Connector or list of Connectors.
 
       """
+
     def __init__(self, gate, input_gates):
         self.gate = gate
         self.input_gates = input_gates
@@ -39,30 +42,27 @@ class Connector:
          Returns:
              A list containing the output values from the input gates.
          """
-        res = []
-        for i, cur_gate in enumerate(self.input_gates):
+        result = []
+        for index, cur_gate in enumerate(self.input_gates):
 
-            # if the input gate is a connector, recursively calculate the output from its input gates
+            # input gate is a connector, calculate how many gates it uses
             if isinstance(cur_gate, Connector):
-                # count the number of input values needed for the connector
                 count = self.logical_inputs_count(cur_gate)
-                # calculate the output from the connector's input gates
-                res.append(cur_gate.send_inputs(inputs[:count]))
-                # remove the used input values from the list
+                result.append(cur_gate.send_inputs(inputs[:count]))
                 inputs = inputs[count:]
 
-            # if the input gate is a binary gate, calculate its output using two input values
+            # input gate is a binary.
             elif cur_gate.__name__ in ['OrGate', 'AndGate', 'NandGate', 'XorGate']:
-                res.append(cur_gate.output(inputs[0],inputs[1]))
+                result.append(cur_gate.output(inputs[0], inputs[1]))
                 inputs = inputs[2:]
 
-            # if the input gate is a unary gate, calculate its output using one input value
+            # input gate is a unary.
             else:
-                res.append(cur_gate.output(inputs[0]))
+                result.append(cur_gate.output(inputs[0]))
                 inputs = inputs[1:]
 
         # return the list of output values
-        return res
+        return result
 
     def logical_inputs_count(self, current):
         """
@@ -75,24 +75,19 @@ class Connector:
                The number of logical inputs used in the circuit.
 
            """
-        # Base case: if there are no more gates to process, return 0
         if not current:
             return 0
 
-        # If the current element is not a connector or a list of connectors/gates, it must be a gate
-        if not isinstance(current, (Connector,list)) :
-            if current.__name__  == 'NotGate':
+        # current is a gate
+        if not isinstance(current, (Connector, list)):
+            if current.__name__ == 'NotGate':
                 return 1
             else:
                 return 2
 
-        # If the current element is a list of connectors/gates, recurse through each element
-        if isinstance(current,list):
+        # current is a connector
+        if isinstance(current, list):
             return self.logical_inputs_count(current[0]) + self.logical_inputs_count(current[1:])
-
-        # If the current element is a connector, recurse through each input gate
         else:
-            return current.logical_inputs_count(current.input_gates[0]) + current.logical_inputs_count(current.input_gates[1:])
-
-
-
+            return current.logical_inputs_count(current.input_gates[0]) + current.logical_inputs_count(
+                current.input_gates[1:])
