@@ -1,11 +1,6 @@
-from enum import Enum
 from cube import Cube
 from random import randint, choice
-
-
-class CubeColor(Enum):
-    WHITE = 0
-    BLACK = 1
+from cube_color import CubeColor
 
 
 class CubeTower:
@@ -27,7 +22,8 @@ class CubeTower:
 
     def __str__(self):
         if self.tower is not None:
-            return "".join([f"{i}-" + self.tower[i].__str__() + '\n' for i in range(len(self.tower) - 1, 0, -1)])
+            return "".join([f"{index_sub_cube}-" + self.tower[index_sub_cube].__str__() + '\n' for index_sub_cube in
+                            range(len(self.tower) - 1, 0, -1)])
 
     def add_cube(self, cube: Cube) -> None:
         """

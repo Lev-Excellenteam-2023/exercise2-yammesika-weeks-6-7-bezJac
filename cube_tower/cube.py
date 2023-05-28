@@ -1,5 +1,5 @@
 from square import Square
-from cube_tower import CubeColor
+from cube_color import CubeColor
 
 class Cube:
     """
