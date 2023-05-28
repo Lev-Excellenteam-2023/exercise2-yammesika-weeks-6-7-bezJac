@@ -1,3 +1,5 @@
+from typing import Type, List, Union
+
 from electric.logic_gate import LogicGate
 
 
@@ -16,11 +18,11 @@ class Connector:
 
       """
 
-    def __init__(self, gate, input_gates):
+    def __init__(self, gate: Type[LogicGate], input_gates: List[Union['Connector', Type[LogicGate]]]):
         self.gate = gate
         self.input_gates = input_gates
 
-    def send_inputs(self, inputs):
+    def send_inputs(self, inputs: List[bool]) -> bool:
         """
         Computes the output of the gate given the inputs.
 
@@ -32,7 +34,7 @@ class Connector:
         """
         return self.gate.output(*self.calculate_input_gates_outputs(inputs))
 
-    def calculate_input_gates_outputs(self, inputs):
+    def calculate_input_gates_outputs(self, inputs: List[bool]) -> List[bool]:
         """
          Calculates the output from the input gates of the connector.
 
@@ -43,28 +45,28 @@ class Connector:
              A list containing the output values from the input gates.
          """
         result = []
-        for index, cur_gate in enumerate(self.input_gates):
+        for index, current_gate in enumerate(self.input_gates):
 
             # input gate is a connector, calculate how many gates it uses
-            if isinstance(cur_gate, Connector):
-                count = self.logical_inputs_count(cur_gate)
-                result.append(cur_gate.send_inputs(inputs[:count]))
+            if isinstance(current_gate, Connector):
+                count = self.logical_inputs_count(current_gate)
+                result.append(current_gate.send_inputs(inputs[:count]))
                 inputs = inputs[count:]
 
             # input gate is a binary.
-            elif cur_gate.__name__ in ['OrGate', 'AndGate', 'NandGate', 'XorGate']:
-                result.append(cur_gate.output(inputs[0], inputs[1]))
+            elif current_gate.__name__ in ['OrGate', 'AndGate', 'NandGate', 'XorGate']:
+                result.append(current_gate.output(inputs[0], inputs[1]))
                 inputs = inputs[2:]
 
             # input gate is a unary.
             else:
-                result.append(cur_gate.output(inputs[0]))
+                result.append(current_gate.output(inputs[0]))
                 inputs = inputs[1:]
 
         # return the list of output values
         return result
 
-    def logical_inputs_count(self, current):
+    def logical_inputs_count(self, current: Union['Connector', Type[LogicGate], List[Union['Connector', Type[LogicGate]]]]) -> int:
         """
            Counts the number of logical inputs used in a logic circuit (Connector).
 
